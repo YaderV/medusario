@@ -24,7 +24,6 @@ CREATE lessons (
     num INT NOT NULL DEFAULT 0,
     text TEXT NOT NULL,
     course_id REFERENCES courses (id) ON DELETE
-
 );
 
 CREATE INDEX lessons_id_idx ON lessons (id);
