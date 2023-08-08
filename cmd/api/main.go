@@ -3,11 +3,11 @@ package main
 import (
 	"context"
 	"database/sql"
-	"flag"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"time"
 
 	_ "github.com/lib/pq"
@@ -19,7 +19,10 @@ type config struct {
 	port int
 	env  string
 	db   struct {
-		dns string
+		dns          string
+		maxOpenConns int
+		maxIdleConns int
+		maxIdleTime  int
 	}
 }
 
@@ -29,14 +32,12 @@ type application struct {
 }
 
 func main() {
-	var cfg config
-	flag.IntVar(&cfg.port, "port", 4000, "API server port")
-	flag.StringVar(&cfg.env, "env", "development", "Enviroment (development|staging|production)")
-	flag.Parse()
-	cfg.db.dns = fmt.Sprintf("postgres://%s:%s@db/%s?sslmode=disable", os.Getenv("DB_USER"),
-		os.Getenv("DB_PASS"), os.Getenv("DB_NAME"))
-
 	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
+	var cfg config
+	err := loadConfig(&cfg)
+	if err != nil {
+		logger.Fatal(err)
+	}
 
 	db, err := openDB(cfg)
 	if err != nil {
@@ -54,8 +55,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/v1/healthcheck", app.healthcheckHandler)
 
-	srv := &http.Server{
-		Addr:         fmt.Sprintf(":%d", cfg.port),
+	srv := &http.Server{Addr: fmt.Sprintf(":%d", cfg.port),
 		Handler:      mux,
 		IdleTimeout:  time.Minute,
 		ReadTimeout:  10 * time.Second,
@@ -74,6 +74,10 @@ func openDB(cfg config) (*sql.DB, error) {
 		return nil, err
 	}
 
+	db.SetMaxOpenConns(cfg.db.maxOpenConns)
+	db.SetMaxIdleConns(cfg.db.maxIdleConns)
+	db.SetConnMaxIdleTime(time.Duration(cfg.db.maxIdleTime) * time.Minute)
+
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
@@ -82,4 +86,28 @@ func openDB(cfg config) (*sql.DB, error) {
 		return nil, err
 	}
 	return db, nil
+}
+
+func loadConfig(cfg *config) error {
+	var err error
+	cfg.db.dns = fmt.Sprintf("postgres://%s:%s@db/%s?sslmode=disable", os.Getenv("DB_USER"),
+		os.Getenv("DB_PASS"), os.Getenv("DB_NAME"))
+	cfg.db.maxOpenConns, err = strconv.Atoi(os.Getenv("MAX_OPEN_CONNS"))
+	if err != nil {
+		return err
+	}
+	cfg.db.maxIdleConns, err = strconv.Atoi(os.Getenv("MAX_IDLE_CONNS"))
+	if err != nil {
+		return err
+	}
+	cfg.db.maxIdleTime, err = strconv.Atoi(os.Getenv("MAX_IDLE_TIME"))
+	if err != nil {
+		return err
+	}
+	cfg.port, err = strconv.Atoi(os.Getenv("SERVER_PORT"))
+	if err != nil {
+		return err
+	}
+	cfg.env = os.Getenv("ENV")
+	return nil
 }
