@@ -6,4 +6,3 @@ CREATE locations (
 );
 
 CREATE INDEX locations_id_idx ON locations (id);
-
