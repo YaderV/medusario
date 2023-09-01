@@ -1,13 +1,17 @@
 package main
 
 import (
+	"encoding/json"
 	"net/http"
 
 	"github.com/yaderv/medusario/internal/data"
 )
 
 func (app *application) createLocationHandler(w http.ResponseWriter, r *http.Request) {
-	loc := &data.Location{}
-	app.models.Locations.Insert(loc)
-	app.logger.Println("db insert")
+	var loc data.Location
+	err := json.NewDecoder(r.Body).Decode(&loc)
+	if err != nil {
+		app.errorResponse(w, r, http.StatusBadRequest, err.Error())
+	}
+	app.models.Locations.Insert(&loc)
 }

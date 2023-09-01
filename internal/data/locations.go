@@ -2,7 +2,6 @@ package data
 
 import (
 	"database/sql"
-	"fmt"
 )
 
 type Location struct {
@@ -17,7 +16,6 @@ type LocationModel struct {
 }
 
 func (l LocationModel) Insert(loc *Location) error {
-	fmt.Println("Inserting location")
 	return nil
 }
 

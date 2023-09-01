@@ -13,3 +13,9 @@ func NewModels(db *sql.DB) *Models {
 		Locations: LocationModel{DB: db},
 	}
 }
+
+func NewMockModels() *Models {
+	return &Models{
+		Locations: MockLocationModel{},
+	}
+}
