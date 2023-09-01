@@ -10,6 +10,19 @@ services:
         command: ["air"]
         depends_on:
             - db
+    migrate:
+        image: migrate/migrate
+        volumes:
+            - ./migrations:/migrations
+        command: [
+            "-path",
+            "/migrations",
+            "-database",
+            "postgres://${DB_USER}:${DB_PASS}@db:5432/${DB_NAME}?sslmode=disable",
+            "up"
+        ]
+        links:
+            - db
     db:
         image: postgres:alpine
         environment:
