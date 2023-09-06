@@ -8,7 +8,12 @@ import (
 
 func (app *application) createLocationHandler(w http.ResponseWriter, r *http.Request) {
 	var loc data.Location
-	err := app.readJSON(r, loc)
+	err := app.readJSON(w, r, &loc)
+	if err != nil {
+		app.errorResponse(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	err = loc.Validate()
 	if err != nil {
 		app.errorResponse(w, http.StatusBadRequest, err.Error())
 		return
