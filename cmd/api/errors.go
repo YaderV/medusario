@@ -27,3 +27,7 @@ func (app *application) failedValidationResponse(w http.ResponseWriter, err erro
 	}
 	app.errorResponse(w, http.StatusBadRequest, errorMap)
 }
+
+func (app *application) internalServerErrorResponse(w http.ResponseWriter, msg string) {
+	app.errorResponse(w, http.StatusInternalServerError, msg)
+}

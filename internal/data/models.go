@@ -5,6 +5,7 @@ import "database/sql"
 type Models struct {
 	Locations interface {
 		Insert(loc *Location) error
+		SelectAll() ([]Location, error)
 	}
 }
 
