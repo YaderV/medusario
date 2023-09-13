@@ -59,5 +59,9 @@ func (m MockLocationModel) Insert(loc *Location) error {
 }
 
 func (m MockLocationModel) SelectAll() ([]Location, error) {
-	return nil, nil
+	locs := []Location{
+		{ID: 1, Title: "Narvarte", Description: "Nice house, good rommies", Address: "Test Address"},
+		{ID: 2, Title: "Las Colinas", Description: "Expensive house in Mga", Address: "Test Address"},
+	}
+	return locs, nil
 }

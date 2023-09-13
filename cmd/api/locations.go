@@ -19,7 +19,7 @@ func (app *application) createLocationHandler(w http.ResponseWriter, r *http.Req
 		return
 	}
 	app.models.Locations.Insert(&loc)
-	err = app.writeJSON(w, http.StatusOK, envelope{"data": loc}, nil)
+	err = app.writeJSON(w, http.StatusCreated, envelope{"data": loc}, nil)
 	if err != nil {
 		app.badRequestResponse(w, err.Error())
 		return
