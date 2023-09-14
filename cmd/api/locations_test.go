@@ -63,11 +63,10 @@ func TestLocations(t *testing.T) {
 
 	t.Run("create location handler field validation", func(t *testing.T) {
 		jsonData := `{
-			"description": "Nice appartment",
-			"address": "Test Address"
+			"description": "Nice appartment"
 		}`
 		expected := map[string]map[string]string{
-			"error": {"Title": "required"},
+			"error": {"title": "required", "address": "required"},
 		}
 		var output map[string]map[string]string
 		res, err := post(srv, "/v1/locations", jsonData, &output)

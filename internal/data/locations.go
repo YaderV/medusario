@@ -2,6 +2,8 @@ package data
 
 import (
 	"database/sql"
+	"reflect"
+	"strings"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -17,6 +19,13 @@ var validate *validator.Validate
 
 func (l Location) Validate() error {
 	validate = validator.New(validator.WithRequiredStructEnabled())
+	validate.RegisterTagNameFunc(func(fld reflect.StructField) string {
+		name := strings.SplitN(fld.Tag.Get("json"), ",", 2)[0]
+		if name == "-" {
+			return ""
+		}
+		return name
+	})
 	return validate.Struct(l)
 }
 
