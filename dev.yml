@@ -1,19 +1,21 @@
 services:
     web:
-        build: .
+        build:
+            context: .
+            dockerfile: ./docker/Dockerfile.dev
         ports:
             - "4000:4000"
         volumes:
-            - .:/usr/src/app
+            - ./locations:/usr/src/app
         env_file:
-            - .env
+            - ./.env
         command: ["air"]
         depends_on:
             - db
     migrate:
         image: migrate/migrate
         volumes:
-            - ./migrations:/migrations
+            - ./locations/migrations:/migrations
         command: [
             "-path",
             "/migrations",
