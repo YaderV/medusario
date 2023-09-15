@@ -10,6 +10,9 @@ down:
 test:
 	docker compose -f docker-compose.test.yml up --build
 
-cleanup-test:
+test-quick:
+	docker compose -f docker-compose.test.yml up
+
+test-cleanup:
 	docker compose -f docker-compose.test.yml down --volumes --remove-orphans --rmi all
 
