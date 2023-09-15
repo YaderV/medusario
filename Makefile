@@ -7,12 +7,12 @@ dev:
 down:
 	docker compose -f docker-compose.dev.yml down
 
-test:
-	docker compose -f docker-compose.test.yml up --build
+test-up:
+	docker compose -f docker-compose.test.yml up --build -d
 
-test-quick:
-	docker compose -f docker-compose.test.yml up
+test-run:
+	docker compose -f docker-compose.test.yml exec test go test ./... -v
 
-test-cleanup:
-	docker compose -f docker-compose.test.yml down --volumes --remove-orphans --rmi all
+test-down:
+	docker compose -f docker-compose.test.yml down --volumes
 

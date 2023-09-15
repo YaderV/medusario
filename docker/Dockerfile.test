@@ -3,5 +3,5 @@ FROM golang:1.21.0-alpine
 WORKDIR /usr/src/app
 
 COPY ./locations .
-CMD ["go", "test", "./...", "-v"]
-
+RUN go mod tidy
+CMD ["tail", "-f", "/dev/null"]

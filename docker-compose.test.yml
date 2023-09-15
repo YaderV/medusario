@@ -2,9 +2,14 @@ services:
     test:
         build:
             context: .
-            dockerfile: ./docker/Dockerfile.test
+            dockerfile: ./docker/Dockerfile.dev
+        ports:
+            - "4000:4000"
+        volumes:
+            - ./locations:/usr/src/app
         env_file:
             - ./.env
+        command: ["air"]
         depends_on:
             - migrate-test
     migrate-test:
