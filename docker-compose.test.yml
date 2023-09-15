@@ -5,3 +5,31 @@ services:
             dockerfile: ./docker/Dockerfile.test
         env_file:
             - ./.env
+        depends_on:
+            - migrate-test
+    migrate-test:
+        image: migrate/migrate
+        volumes:
+            - ./locations/migrations:/migrations
+        command: [
+            "-path",
+            "/migrations",
+            "-database",
+            "postgres://${DB_USER_TEST}:${DB_PASS_TEST}@db-test:5432/${DB_NAME_TEST}?sslmode=disable",
+            "up"
+        ]
+        links:
+            - db-test
+    db-test:
+        image: postgres:alpine
+        environment:
+            - POSTGRES_USER=${DB_USER_TEST}
+            - POSTGRES_PASSWORD=${DB_PASS_TEST}
+            - POSTGRES_DB=${DB_NAME_TEST}
+        ports:
+            - "${DB_PORT_TEST}:5432"
+        volumes:
+            - pg-test-volume:/var/lib/postgresql/data
+
+volumes:
+    pg-test-volume:
