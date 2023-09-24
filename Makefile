@@ -11,7 +11,7 @@ test-up:
 	docker compose -f docker-compose.test.yml up --build -d
 
 test-run:
-	docker compose -f docker-compose.test.yml exec test go test ./... -v
+	./docker/migrate_test.sh
 
 test-down:
 	docker compose -f docker-compose.test.yml down --volumes

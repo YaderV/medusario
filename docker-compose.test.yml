@@ -3,8 +3,6 @@ services:
         build:
             context: .
             dockerfile: ./docker/Dockerfile.dev
-        ports:
-            - "4000:4000"
         volumes:
             - ./locations:/usr/src/app
         env_file:

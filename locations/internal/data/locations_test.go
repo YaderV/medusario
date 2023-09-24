@@ -38,13 +38,13 @@ func TestLocations(t *testing.T) {
 		}
 		err := m.Locations.Insert(loc)
 		assert.NoError(err)
-		assert.NotEqual(int64(0), loc.ID)
+		assert.Equal(int64(1), loc.ID)
 	})
 
 	t.Run("select all", func(t *testing.T) {
 		locs, err := m.Locations.SelectAll()
 		assert.NoError(err)
-		assert.NotEqual(0, len(locs))
+		assert.Equal(1, len(locs))
 	})
 
 }
