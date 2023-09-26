@@ -1,0 +1,9 @@
+openapi: 3.0.0
+
+info:
+  title: Location API
+  description: Location API provides endpoints to manage house or appartment with renting space.
+  version: 1.0.0
+
+servers:
+  - url https://127.0.0.1:4000/v1
