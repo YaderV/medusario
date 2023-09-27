@@ -14,5 +14,5 @@ test-run:
 	./docker/migrate_test.sh
 
 test-down:
-	docker compose -f docker-compose.test.yml down --volumes
+	docker compose -f docker-compose.test.yml down
 

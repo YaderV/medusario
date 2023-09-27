@@ -9,7 +9,7 @@ It is currently in development, following a microservices architecture, solely f
 ## Deveploment
 - Run `make build` to build all the project image
 - Run `make dev` to start all the containers
-- Run `make stop` to stop all the containers
+- Run `make down` to stop all the containers
 
 ## Testing
 - Run `make test-up` to set the testing enviroment for unit and integration tests

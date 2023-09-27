@@ -6,4 +6,104 @@ info:
   version: 1.0.0
 
 servers:
-  - url https://127.0.0.1:4000/v1
+  - url: https://127.0.0.1:4000/v1
+
+paths:
+  /locations:
+    get:
+      summary: Returns a list of locations.
+
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: The unique identifier for location.
+                        title:
+                          type: string
+                          description: The location title.
+                        description:
+                          type: string
+                          description: The location description.
+                        address:
+                          type: string
+                          description: The location address in text.
+                example:
+                  data:
+                    - id: 1
+                      title: test
+                      description: This is a test description for test
+                      address: Colonia Roma
+                    - id: 2
+                      title: test 2
+                      description: This is a test description for test 2
+                      address: Colonia Narvarte
+        '500':
+          description: Unexpected error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error message describing the unexpected error
+              example:
+                error: The field address does not exist in the database
+    post:
+      summary: Add a new location.
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: The location title.
+                description:
+                  type: string
+                  description: The location description.
+                address:
+                  type: string
+                  description: The location address in text.
+                required:
+                  - title
+                  - description
+                  - address
+      response:
+        '201':
+          description: Created success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        description: The unique identifier for location.
+                      title:
+                        type: string
+                        description: The location title.
+                      description:
+                        type: string
+                        description: The location description.
+                      address:
+                        type: string
+                        description: The location address in text.
+
