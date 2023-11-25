@@ -1,17 +1,17 @@
 services:
-    web_dev:
+    web_prod:
         build:
             context: .
-            dockerfile: ./docker/Dockerfile.dev
+            dockerfile: ./docker/Dockerfile.prod
         ports:
             - "4000:4000"
         volumes:
             - ./locations:/usr/src/app
         env_file:
             - ./.env
-        command: ["air"]
+        command: ["./locations"]
         depends_on:
-            - db_dev
+            - db_prod
     migrate:
         image: migrate/migrate
         volumes:
@@ -24,17 +24,15 @@ services:
             "up"
         ]
         links:
-            - db_dev
-    db_dev:
+            - db_prod
+    db_prod:
         image: postgres:alpine
         environment:
             - POSTGRES_USER=${DB_USER}
             - POSTGRES_PASSWORD=${DB_PASS}
             - POSTGRES_DB=${DB_NAME}
-        ports:
-            - "${DB_PORT}:5432"
         volumes:
-            - pg-dev-volume:/var/lib/postgresql/data
+            - pg-prod-volume:/var/lib/postgresql/data
 
 volumes:
-    pg-dev-volume:
+    pg-prod-volume:

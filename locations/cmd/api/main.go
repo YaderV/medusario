@@ -91,8 +91,8 @@ func openDB(cfg config) (*sql.DB, error) {
 
 func loadConfig(cfg *config) error {
 	var err error
-	cfg.db.dns = fmt.Sprintf("postgres://%s:%s@db/%s?sslmode=disable", os.Getenv("DB_USER"),
-		os.Getenv("DB_PASS"), os.Getenv("DB_NAME"))
+	cfg.db.dns = fmt.Sprintf("postgres://%s:%s@%s/%s?sslmode=disable", os.Getenv("DB_USER"),
+		os.Getenv("DB_PASS"), os.Getenv("DB_HOST"), os.Getenv("DB_NAME"))
 	cfg.db.maxOpenConns, err = strconv.Atoi(os.Getenv("MAX_OPEN_CONNS"))
 	if err != nil {
 		return err

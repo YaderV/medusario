@@ -18,4 +18,4 @@ CMD="docker compose -f docker-compose.test.yml --env-file ./.env run migrate-tes
 
 eval $CMD
 
-docker compose -f docker-compose.test.yml exec test  go test ./... -v -count=1
+docker compose -f docker-compose.test.yml exec test go test ./... -v -count=1

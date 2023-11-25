@@ -1,0 +1,5 @@
+FROM golang:1.21.0-alpine
+
+WORKDIR /usr/src/app
+COPY ./locations .
+RUN go mod tidy && go build -o ./locations ./cmd/api/main.go
