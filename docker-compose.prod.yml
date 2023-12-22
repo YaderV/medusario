@@ -5,13 +5,20 @@ services:
             dockerfile: ./docker/Dockerfile.prod
         ports:
             - "4000:4000"
-        volumes:
-            - ./locations:/usr/src/app
-        env_file:
-            - ./.env
-        command: ["./locations"]
+        command: ["./bin"]
         depends_on:
             - db_prod
+        environment:
+            - DB_USER=${DB_USER}
+            - DB_PASS=${DB_PASS}
+            - DB_NAME=${DB_NAME}
+            - DB_HOST=${DB_HOST_PROD}
+            - DB_PORT=${DB_PORT}
+            - MAX_OPEN_CONNS=${MAX_OPEN_CONNS}
+            - MAX_IDLE_CONNS=${MAX_IDLE_CONNS}
+            - MAX_IDLE_TIME=${MAX_IDLE_TIME}
+            - SERVER_PORT=${SERVER_PORT}
+            - ENV=production
     migrate:
         image: migrate/migrate
         volumes:
@@ -20,7 +27,7 @@ services:
             "-path",
             "/migrations",
             "-database",
-            "postgres://${DB_USER}:${DB_PASS}@${DB_HOST}:5432/${DB_NAME}?sslmode=disable",
+            "postgres://${DB_USER}:${DB_PASS}@${DB_HOST_PROD}:5432/${DB_NAME}?sslmode=disable",
             "up"
         ]
         links:

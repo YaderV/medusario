@@ -34,7 +34,7 @@ type application struct {
 }
 
 func main() {
-	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
+	logger := log.New(os.Stdout, "", log.Lshortfile|log.Ldate|log.Ltime)
 	var cfg config
 	err := loadConfig(&cfg)
 	if err != nil {
