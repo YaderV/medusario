@@ -1,49 +1,46 @@
 services:
-    web_dev:
+    web_prod:
+        image: location-production:v1.0
         build:
             context: .
-            dockerfile: ./docker/Dockerfile.dev
+            dockerfile: ./docker/Dockerfile.prod
         ports:
             - "4000:4000"
-        volumes:
-            - ./locations:/usr/src/app
-        command: ["air"]
+        command: ["./location"]
         depends_on:
-            - db_dev
+            - db_prod
         environment:
             - DB_USER=${DB_USER}
             - DB_PASS=${DB_PASS}
             - DB_NAME=${DB_NAME}
-            - DB_HOST=${DB_HOST_DEV}
+            - DB_HOST=${DB_HOST_PROD}
             - DB_PORT=${DB_PORT}
             - MAX_OPEN_CONNS=${MAX_OPEN_CONNS}
             - MAX_IDLE_CONNS=${MAX_IDLE_CONNS}
             - MAX_IDLE_TIME=${MAX_IDLE_TIME}
             - SERVER_PORT=${SERVER_PORT}
-            - ENV=enviroment
+            - ENV=production
     migrate:
         image: migrate/migrate
         volumes:
-            - ./locations/migrations:/migrations
+            - ./migrations:/migrations
         command: [
             "-path",
             "/migrations",
             "-database",
-            "postgres://${DB_USER}:${DB_PASS}@${DB_HOST_DEV}:5432/${DB_NAME}?sslmode=disable",
+            "postgres://${DB_USER}:${DB_PASS}@${DB_HOST_PROD}:5432/${DB_NAME}?sslmode=disable",
             "up"
         ]
         links:
-            - db_dev
-    db_dev:
+            - db_prod
+    db_prod:
         image: postgres:alpine
         environment:
             - POSTGRES_USER=${DB_USER}
             - POSTGRES_PASSWORD=${DB_PASS}
             - POSTGRES_DB=${DB_NAME}
-        ports:
-            - "${DB_PORT}:5432"
         volumes:
-            - pg-dev-volume:/var/lib/postgresql/data
+            - pg-prod-volume:/var/lib/postgresql/data
 
 volumes:
-    pg-dev-volume:
+    pg-prod-volume:

@@ -1,8 +1,0 @@
-FROM golang:1.21
-
-WORKDIR /usr/src/app
-
-COPY ./locations .
-
-RUN go mod download
-RUN go build -o ./bin ./cmd/api
